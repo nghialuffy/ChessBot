@@ -8,16 +8,22 @@ if "__main__" == __name__:
     driver.start_browser()
     driver.get(url=BaseConfig.CHESS_URL)
     chess = Chess()
+    is_white = True
+    input("Press Enter to start game...")
     while True:
         try:
-            input("Press Enter to continue...")
-            fen_position = driver.get_fen_position()
-            print(fen_position)
-            is_set = chess.set_fen_position(fen_position=fen_position)
-            if is_set:
+            if is_white:
                 best_move = chess.get_best_move()
-                print(best_move)
-                driver.move_chess(move=best_move)
+                is_valid = chess.set_move(best_move)
+                print("Best move: ", best_move)
+                if is_valid:
+                    driver.move_chess(move=best_move)
+            is_white = True
+            while True:
+                next_step = input("Input next step: ")
+                if chess.set_move(next_step):
+                    break
+
         except Exception as exc:
             choose = input("Continue or Break: (c/b)")
             if choose.lower() == "c":

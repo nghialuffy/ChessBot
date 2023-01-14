@@ -5,11 +5,13 @@ class BaseConfig:
     CHESS_URL = "https://www.chess.com/play/computer"
     WAIT_FIND_TIME = 5
     WAIT_CLICK_TIME = 1
+    PEACE = "piece"
 
 
 class BasePattern:
     FEN = "fen=(?P<fen>.*)&board"
-
+    SQUARE = "square-(?P<square>[1-8][1-8])"
+    CHESS = "(?P<chess>[wb][pnbrqk])"
 
 class BaseXpath:
     SHARE = "/html/body/div[3]/div/div[3]/div[2]/div[1]/button[2]"

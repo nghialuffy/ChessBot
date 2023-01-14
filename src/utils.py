@@ -1,3 +1,4 @@
+from typing import Tuple
 from urllib.parse import unquote
 
 
@@ -32,3 +33,9 @@ class Utils:
     @staticmethod
     def url_decode(string: str) -> str:
         return unquote(string=string)
+
+    @staticmethod
+    def to_xy(position: str) -> Tuple[int, int]:
+        x = int(position[0]) - 1
+        y = int(position[1]) - 1
+        return x, y

@@ -12,6 +12,7 @@ from urllib.parse import unquote
 from typing import Tuple
 
 from src.configs import BaseConfig, BaseXpath, BasePattern
+from src.fen import FenService
 from src.utils import PositionToCssSelector, Utils
 
 
@@ -25,7 +26,7 @@ class WebDriver:
     def start_browser(self):
         chrome_options = ChromeOptions()
         chrome_options.add_argument(f"user-data-dir={self._name}_user")
-        chrome_options.add_argument("window-size=1300,800")
+        chrome_options.add_argument("window-size=1400,1000")
         chrome_options.add_argument("--mute-audio")
         chrome_options.add_argument("--auto-open-devtools-for-tabs")
         chrome_options.add_argument("Cache-Control=no-cache")
@@ -66,23 +67,24 @@ class WebDriver:
         from_element = self.get_element_by_css_selector(css_selector=from_selector)
         from_element.click()
 
+        time.sleep(BaseConfig.WAIT_CLICK_TIME)
         to_element = self.get_element_by_css_selector(css_selector=to_selector)
         actions.move_to_element(to_element).click_and_hold(to_element).perform()
 
-    def get_fen_position(self):
-        element = self.get_element_by_xpath(xpath=BaseXpath.SHARE)
-        element.click()
-        time.sleep(BaseConfig.WAIT_CLICK_TIME)
-
-        element = self.get_element_by_xpath(xpath=BaseXpath.FEN)
-        href = element.get_attribute('href')
-        fen_match = re.search(pattern=BasePattern.FEN, string=href)
-        result = fen_match.group("fen") if fen_match else ""
-        fen_position = Utils.url_decode(string=result)
-
-        element = self.get_element_by_xpath(xpath=BaseXpath.CLOSE)
-        element.click()
+    def get_fen_position(self, is_white: bool = True) -> str:
+        fen_position = ""
+        pieces = self.get_all_pieces()
+        if pieces:
+            fen_service = FenService(pieces=pieces, is_white=is_white)
+            fen_service.handle()
+            # fen_service.print_board()
+            fen_position = fen_service.get_fen()
         return fen_position
+
+    def get_all_pieces(self):
+        wait = WebDriverWait(self._driver, BaseConfig.WAIT_FIND_TIME)
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, BaseConfig.PEACE)))
+        return self._driver.find_elements(By.CLASS_NAME, BaseConfig.PEACE)
 
     def close(self):
         self._driver.close()
