@@ -1,4 +1,5 @@
-from typing import Tuple
+from __future__ import annotations
+
 from urllib.parse import unquote
 
 
@@ -35,7 +36,25 @@ class Utils:
         return unquote(string=string)
 
     @staticmethod
-    def to_xy(position: str) -> Tuple[int, int]:
+    def to_xy(position: str) -> tuple[int, int]:
         x = int(position[0]) - 1
         y = int(position[1]) - 1
         return x, y
+
+    @staticmethod
+    def to_square(x: int, y: int) -> str:
+        row = chr(x + 97)
+        col = y + 1
+        return f"{row}{col}"
+
+    @staticmethod
+    def to_position(x: int, y: int) -> str:
+        return f"{x + 1}{y +1}"
+
+    @staticmethod
+    def is_white_piece(piece: str) -> bool:
+        return piece.isupper()
+
+    @staticmethod
+    def is_black_piece(piece: str) -> bool:
+        return piece.islower()
