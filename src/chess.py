@@ -64,46 +64,50 @@ class Chess:
         current_data = current_board.get_board()
         from_position = ""
         to_position = ""
+        is_current_castling = cls.is_current_castling(
+            previous_data=previous_data,
+            current_data=current_data,
+            is_white=is_white,
+        )
+        # Handle when castling
+        if is_current_castling:
+            is_compute_white = not is_white
+            if is_compute_white:
+                if current_data[0][6] == "K":
+                    from_position = "e1"
+                    to_position = "g1"
+                else:
+                    from_position = "e1"
+                    to_position = "c1"
+            else:
+                if current_data[7][6] == "k":
+                    from_position = "e8"
+                    to_position = "g8"
+                else:
+                    from_position = "e8"
+                    to_position = "c8"
+
+            return from_position + to_position
+
+        # Not castling
         for i in range(8):
             for j in range(8):
                 if previous_data[i][j] != current_data[i][j]:
-                    is_current_castling = cls.is_current_castling(
-                        previous_data=previous_data,
-                        current_data=current_data,
-                        is_white=is_white,
-                    )
-                    if is_current_castling:
-                        if is_white:
-                            if j == 6:
-                                from_position = "e1"
-                                to_position = "g1"
-                            else:
-                                from_position = "e1"
-                                to_position = "c1"
-                        else:
-                            if j == 6:
-                                from_position = "e8"
-                                to_position = "g8"
-                            else:
-                                from_position = "e8"
-                                to_position = "c8"
+                    # Get from position
+                    if current_data[i][j] == "":
+                        from_position = Utils.to_square(x=j, y=i)
 
-                        return from_position + to_position
-                    else:
-                        # Get from position
-                        if current_data[i][j] == "":
-                            from_position = Utils.to_square(x=j, y=i)
-
-                        # Get to position
-                        if current_data[i][j] != "":
-                            to_position = Utils.to_square(x=j, y=i)
+                    # Get to position
+                    if current_data[i][j] != "":
+                        to_position = Utils.to_square(x=j, y=i)
         return from_position + to_position
 
     @classmethod
     def is_current_castling(
         cls, previous_data: list, current_data: list, is_white: bool = True
     ) -> bool:
-        if is_white:
+        is_checking_white = not is_white
+        if is_checking_white:
             if previous_data[0][4] == "K" and current_data[0][6] == "K":
                 return True
             if previous_data[0][4] == "K" and current_data[0][2] == "K":

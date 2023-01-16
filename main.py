@@ -18,9 +18,9 @@ if "__main__" == __name__:
     input("Press Enter to start game...")
     while True:
         try:
-            chess = Chess()
             is_white_str = input("Is white? (y/n): ")
             is_white = is_white_str.lower() == "y"
+            chess = Chess(is_white=is_white)
             level = int(input("Level (1-20): "))
             chess.set_skill_level(skill_level=level)
             input("Press Enter to start auto play chess...")
@@ -48,8 +48,8 @@ if "__main__" == __name__:
                         is_computer_move_valid = chess.set_move(
                             move=computer_move,
                         )
-                        print("Computer move: ", computer_move)
                         if is_computer_move_valid:
+                            print("Computer move: ", computer_move)
                             break
                 else:
                     # Get computer move
@@ -66,8 +66,8 @@ if "__main__" == __name__:
                         is_computer_move_valid = chess.set_move(
                             move=computer_move,
                         )
-                        print("Computer move: ", computer_move)
                         if is_computer_move_valid:
+                            print("Computer move: ", computer_move)
                             break
 
                     time.sleep(BaseConfig.WAIT_CLICK_TIME)
