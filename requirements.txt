@@ -1,0 +1,2 @@
+stockfish~=3.28.0
+selenium~=4.7.2
