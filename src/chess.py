@@ -27,7 +27,6 @@ class Chess:
     def set_move(self, move: str):
         if move and self._stockfish.is_move_correct(move_value=move):
             self._move_list.append(move)
-            self.reset()
             self._stockfish.set_position(self._move_list)
             print(self._move_list)
             return True
